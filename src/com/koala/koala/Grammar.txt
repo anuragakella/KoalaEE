@@ -1,0 +1,19 @@
+// BNF for the math parser
+// MATH
+<expression> ::= <equality>
+//<or> ::= <and> ( "or" <and> )*
+//<and> ::= <equality> ( "and" <equality> )*
+<equality> ::= <comparision> (( "!=" | "==" ) <comparision>)*
+<comparision> ::= <addsub> (("<" | "<=" | ">" | ">=") <addsub>)*
+<addsub> ::= <muldiv> (("+" | "-") <muldiv>)*
+<muldiv> ::= <unary> (("*" | "/") <unary>)*
+<unray> ::= <literal> | ("+" | "-" | "!") <literal> | "(" <expression> ")"
+<literal> ::= <NUMBER> | <STRING> | "True" | "False" | "Blank"
+
+
+// Primaries
+<NUMBER> ::= DIGIT+ ( "." DIGIT+ )?
+<STRING> ::= '"' <any char except '"'>* '"'
+<IDENTIFIER> ::= ALPHA ( ALPHA | DIGIT )*
+<ALPHA> ::= 'a' ... 'z' | 'A' ... 'Z' | '_'
+<DIGIT> ::= '0' ... '9'
