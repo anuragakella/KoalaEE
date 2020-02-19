@@ -2,14 +2,19 @@ package com.koala.koala;
 
 import com.koala.helpers.TokenType;
 
+
+// Token class forms the backbone of the parser and the lexer.
+// Each token has info about itself: it's position and value, and an object if the token is a literal.
 public class Token {
 
+    // TokenType enum
     private TokenType type; //stores token type
     private String token; // stores the token in string from source
     private Object literal; // stores the object version fo the token if available
     private int line; // line number for the token
     private int col; // col number for the token
 
+    // Getter methods to access the vars
     public TokenType geType(){
         return type;
     }

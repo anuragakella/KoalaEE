@@ -7,6 +7,8 @@ import com.koala.diagnostics.Diagnostics;
 import com.koala.helpers.ErrorType;
 import com.koala.helpers.TokenType;
 
+
+// forms chunks of text that make sense, and we these to parse a syntax tree
 public class Lexer {
     private final String source;
     private List<Token> tokenList = new ArrayList<>();
@@ -110,12 +112,14 @@ public class Lexer {
 
     // HELPER METHODS:
 
+    // check next character, return bool
     private boolean checkNext(char match){
         if(peek(0) == match)
             return true;
         return false;
     }
 
+    // consume a string when the lexer comes across a "
     private void consumeString() {
         while (peek(0) != '"' && !sourceEnd()) moveCursor();
         if(sourceEnd()){
@@ -142,6 +146,7 @@ public class Lexer {
 
     //look ahead one characters
     private char peek(int offset) {
+        // if the cursor is at the end we wouldn't want to return null and break the lexer
         if(sourceEnd()) return '\0';
         return source.charAt(cursor + offset);
     }
@@ -155,6 +160,7 @@ public class Lexer {
 
     // Consumes a number
     private void consumeNumber() {
+        // consume a whole number whenever the lexer comes across a digit
         while (isDigit(peek(0)) && !sourceEnd()) moveCursor();
         if(peek(0) == '.' && isDigit(peek(1)))
             moveCursor();
@@ -167,6 +173,7 @@ public class Lexer {
         return (c >= '0' && c <= '9');
     }
 
+    // move to the next character in the input
     private char moveCursor(){
         cursor++;
         return source.charAt(cursor - 1);

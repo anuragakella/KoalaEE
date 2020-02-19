@@ -12,12 +12,16 @@ public class Parser {
     public List<Expression> statements;
     Diagnostics parseErrors = new Diagnostics();
     private int cursor = 0;
+
+    //globalErrorState - flag to stop the parse loop if there's an error
     private boolean globalErrorState;
 
+    // constructor to get the lexed tokens
     public Parser(List<Token> sourceTokens){
         this.sourceTokens = sourceTokens;
     }
 
+    // starts parsing here
     public void parse() {
         statements = new ArrayList<>();
         globalErrorState = false;
@@ -26,11 +30,13 @@ public class Parser {
         }
     }
 
+    // recursive methods to construct an Abstract Syntax tree
     private Expression expression() {
         return andOr();
     }
 
     private Expression andOr(){
+        // checks for and/ or operator..
         Expression left = equality();
         while (peekCheck(TokenType.AND, TokenType.OR)){
             Token op = nextToken();

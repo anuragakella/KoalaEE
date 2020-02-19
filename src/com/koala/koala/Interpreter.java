@@ -14,17 +14,25 @@ public class Interpreter implements Expression.Visitor<Object> {
         return expression.evaluate(this);
     }
 
-    private Object boolEval(boolean b){
-        if(b)
-            return "True";
-        return "False";
-    }
-
     @Override
     public Object evaluateBinary(Expression.BinaryExpression binaryExpression) throws Exception {
         Object left = traverse(binaryExpression.left);
         Object right = traverse(binaryExpression.right);
         switch (binaryExpression.operator.geType()){
+
+            case AND:
+                if(left instanceof Boolean && right instanceof Boolean)
+                    return  ((boolean)left && (boolean)right);
+                else
+                    throw new Exception("Operator 'and' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
+
+            case OR:
+                if(left instanceof Boolean && right instanceof Boolean)
+                    return  ((boolean)left || (boolean)right);
+                else if(left instanceof String && right instanceof String)
+                    return  left.toString() + right.toString();
+                else
+                    throw new Exception("Operator 'and' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
 
             case PLUS:
                 if(left instanceof Double && right instanceof Double)
@@ -59,19 +67,19 @@ public class Interpreter implements Expression.Visitor<Object> {
 
             case LESS:
                 if(left instanceof Double && right instanceof Double)
-                    return boolEval((double)left < (double)right);
+                    return ((double)left < (double)right);
                 else
                     throw new Exception("Operator '<' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
 
             case GREATER:
                 if(left instanceof Double && right instanceof Double)
-                    return boolEval((double)left > (double)right);
+                    return ((double)left > (double)right);
                 else
                     throw new Exception("Operator '>' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
 
             case LESS_EQUAL:
                 if(left instanceof Double && right instanceof Double)
-                    return boolEval((double)left <= (double)right);
+                    return ((double)left <= (double)right);
 
                 else
                     throw new Exception("Operator '<=' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
@@ -84,15 +92,15 @@ public class Interpreter implements Expression.Visitor<Object> {
 
             case BANG_EQUAL:
                 if(left instanceof Double && right instanceof Double)
-                    return boolEval((double)left != (double)right);
+                    return ((double)left != (double)right);
                 else
                     throw new Exception("Operator '!=' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
 
             case EQUAL_EQUAL:
                 if(left instanceof Double && right instanceof Double)
-                    return boolEval((double)left == (double)right);
+                    return ((double)left == (double)right);
                 else if((left instanceof Boolean && right instanceof Boolean))
-                    return boolEval((boolean)left == (boolean)right);
+                    return ((boolean)left == (boolean)right);
                 else
                     throw new Exception("Operator '==' cannot be applied to '" + left.getClass() + "', '" + right.getClass() + "'");
 

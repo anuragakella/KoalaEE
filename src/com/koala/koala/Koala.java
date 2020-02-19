@@ -24,15 +24,18 @@ public class Koala {
     }
 
     private static void startRepl() throws Exception {
+        //get TimeZone info for REPL
         ZonedDateTime z = ZonedDateTime.now();
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
+        // Display Koala basic info
         System.out.println("Koala EE " + version +  " on " + System.getProperty("os.name") + " [" + z.getHour() + ":" + z.getMinute() + "/<" + z.getZone() + ">" + "]");
         System.out.println("Type \"help\" or \"credits\" for more info.");
         String inputString;
         while (true){
             System.out.print(">> ");
             inputString = reader.readLine();
+            //help, credits stuff
             if(inputString.equalsIgnoreCase("help")){
                 System.out.println("Koala EE" + version);
                 System.out.println("Koala EE (Expression Evaluator) is a basic expression evaluator, that can process and calcuate basic math/ logical expressions.");
@@ -62,33 +65,34 @@ public class Koala {
     private static void runKoala(String src) throws Exception {
         Lexer lexer = new Lexer(src);
         List<Token> toks = lexer.tokenize();
-//        for(Token token : toks){
-//            System.out.println(token.showToken());
-//        }
         for (String error : lexer.diagnostics.errorsList){
             System.out.println(error);
         }
         Parser parser = new Parser(toks);
         parser.parse();
-        TreePrinter printer = new TreePrinter();
+        // TreePrinter prints the AST of the current statement.
+        // create a new TreePrinter Object and pass it to each of the statements.
+        // TreePrinter is a Visitor pattern based class that 'visits' each node and prints the node values out based on how deep it is.
+        // TreePrinter printer = new TreePrinter();
+        // Interpreter too follows the Visitor Pattern and just 'visits' the tree nodes and executes them one by one.
+        // Yes, that isn't very efficient/ optimal
         Interpreter koalaint = new Interpreter();
-//        for(Expression statement : parser.statements){
-//            System.out.println(statement.printTree(printer));
-//        }
         for (String error : parser.parseErrors.errorsList){
+            // Errors get two lists, one is populated with errors that occur during lexing and this one is populated by the parser
+            // Printing all the errors helps.. resolve them?
             System.out.println(error);
         }
         for(Expression statement : parser.statements){
+            // stripOutput converts double to int (via strings).. for prettifying the result and nothing else
             System.out.println(stripOutput(statement.evaluate(koalaint)));
         }
     }
 
     private static Object stripOutput(Object output) {
-//        if(output instanceof Double) {
-//            String op = output.toString();
-//            if (op.substring(op.indexOf('.'), op.indexOf('.') + 2) == "0")
-//                return (output + "").substring(0, );
-//        }
+        if(output instanceof Boolean) {
+           if((boolean)output) return "True";
+           else return "False";
+        }
         return output;
     }
 
