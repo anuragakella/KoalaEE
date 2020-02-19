@@ -19,6 +19,7 @@ public class Koala {
             System.out.println("File");
         } else {
             startRepl();
+            //start REPL
         }
     }
 
